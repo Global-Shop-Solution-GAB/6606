@@ -1,0 +1,450 @@
+﻿Program.Sub.ScreenSU.Start
+gui.Form1..create
+gui.Form1..caption("Select Location for File Export")
+gui.Form1..size(5805,2115)
+gui.Form1..minx(0)
+gui.Form1..miny(0)
+gui.Form1..position(0,0)
+gui.Form1..event(unload,form1_unload)
+gui.Form1..alwaysontop(False)
+gui.Form1..fontname("Arial")
+gui.Form1..fontsize(8)
+gui.Form1..forecolor(0)
+gui.Form1..fontstyle(,,,,)
+gui.Form1..BackColor(-2147483633)
+gui.Form1..controlbox(True)
+gui.Form1..maxbutton(False)
+gui.Form1..minbutton(True)
+gui.Form1..mousepointer(0)
+gui.Form1..moveable(True)
+gui.Form1..sizeable(False)
+gui.Form1..ShowInTaskBar(True)
+gui.Form1..titlebar(True)
+gui.Form1.txtFilePath.create(textbox,"",True,4620,300,0,200,400,False,0,Arial,8,-2147483643,1)
+gui.Form1.txtFilePath.defaultvalue("")
+gui.Form1.txtFilePath.controlgroup(0)
+gui.Form1.lbl1.create(label,"Save File as:",True,1935,255,1,200,200,True,0,Arial,8,-2147483633,0)
+gui.Form1.lbl1.defaultvalue("")
+gui.Form1.lbl1.controlgroup(0)
+gui.Form1.cmdBrwsFile.create(button)
+gui.Form1.cmdBrwsFile.caption("^")
+gui.Form1.cmdBrwsFile.visible(True)
+gui.Form1.cmdBrwsFile.size(495,375)
+gui.Form1.cmdBrwsFile.zorder(0)
+gui.Form1.cmdBrwsFile.position(4900,370)
+gui.Form1.cmdBrwsFile.enabled(True)
+gui.Form1.cmdBrwsFile.fontname("Arial")
+gui.Form1.cmdBrwsFile.fontsize(8)
+gui.Form1.cmdBrwsFile.event(click,cmdbrwsfile_click)
+gui.Form1.cmdBrwsFile.defaultvalue("")
+gui.Form1.cmdBrwsFile.controlgroup(0)
+gui.Form1.cmdOk.create(button)
+gui.Form1.cmdOk.caption("Ok")
+gui.Form1.cmdOk.visible(True)
+gui.Form1.cmdOk.size(855,375)
+gui.Form1.cmdOk.zorder(0)
+gui.Form1.cmdOk.position(200,900)
+gui.Form1.cmdOk.enabled(True)
+gui.Form1.cmdOk.fontname("Arial")
+gui.Form1.cmdOk.fontsize(8)
+gui.Form1.cmdOk.event(click,cmdok_click)
+gui.Form1.cmdOk.defaultvalue("")
+gui.Form1.cmdOk.controlgroup(0)
+gui.Form1.cmdCancel.create(button)
+gui.Form1.cmdCancel.caption("Cancel")
+gui.Form1.cmdCancel.visible(True)
+gui.Form1.cmdCancel.size(855,375)
+gui.Form1.cmdCancel.zorder(0)
+gui.Form1.cmdCancel.position(1200,900)
+gui.Form1.cmdCancel.enabled(True)
+gui.Form1.cmdCancel.fontname("Arial")
+gui.Form1.cmdCancel.fontsize(8)
+gui.Form1.cmdCancel.event(click,form1_unload)
+gui.Form1.cmdCancel.defaultvalue("")
+gui.Form1.cmdCancel.controlgroup(0)
+gui.Form1.cmdBrwsFile.tabstop(True)
+gui.Form1.cmdBrwsFile.tabindex(1)
+gui.Form1.cmdOk.tabstop(True)
+gui.Form1.cmdOk.tabindex(2)
+gui.Form1.cmdCancel.tabstop(True)
+gui.Form1.cmdCancel.tabindex(3)
+gui.Form1.txtFilePath.tabstop(True)
+gui.Form1.txtFilePath.tabindex(4)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Variable.Global.sRunTime.Declare(String)
+Variable.Global.sRunCYMD.Declare(String)
+Variable.Global.sFilePath.Declare(String)
+Variable.UDT.uExport.Define("Dept",String)
+Variable.UDT.uExport.Define("Reg_Hours",Float)
+Variable.UDT.uExport.Define("OT",Float)
+Variable.UDT.uExport.Define("Holiday",Float)
+Variable.UDT.uExport.Define("PTO",Float)
+Variable.UDT.uExport.Define("Bereavement",Float)
+Variable.UDT.uExport.Define("Jury_Duty",Float)
+Variable.UDT.uExport.Define("Employee",String,Employee)
+Variable.UDT.uExport.Define("Name",String,Name)
+Variable.UDT.uExport.Define("SSN",String,SSN)
+Variable.UDT.uExport.Define("Pay_Type",String,Pay_Type)
+Variable.UDT.uEmployee.Define("Employee",String,Employee)
+Variable.UDT.uEmployee.Define("Name",String,Name)
+Variable.UDT.uEmployee.Define("Type",String,Type)
+Variable.UDT.uEmployee.Define("Hours",Float,Hours)
+Variable.UDT.uEmployee.Define("Dept",String,Dept)
+Variable.UDT.uEmployee.Define("EC",String,EC)
+Variable.uGlobal.uEmployee.Declare("uEmployee")
+Variable.uGlobal.uExport.Declare("uExport")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'Coded by SFF
+'1/5/2015
+'Syndeo Bank Payroll Export
+'15290
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sRet.Declare(String)
+
+'activate when delivered
+F.Intrinsic.String.Left(V.Passed.888888,8,V.Global.sRunCYMD)
+F.Intrinsic.String.Mid(V.Passed.888888,9,6,V.Global.sRunTime)
+
+
+F.ODBC.Connection!conX.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass,72000)
+Gui.Form1..Show
+Gui.Form1.cmdBrwsFile.SetFocus
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+Function.Intrinsic.String.Concat("Project: GCG_6606_ISOLVE_EXP.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+program.sub.form1_unload.start
+F.Intrinsic.Control.End
+
+program.sub.form1_unload.end
+
+program.sub.cmdok_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdok_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.sTemp.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.i.Declare(Float)
+V.Local.iExp.Declare(Float)
+V.Local.iRet.Declare(Float)
+
+v.local.sEmp.Declare
+v.Local.sFilter.Declare
+v.Local.fER.Declare
+v.Local.fEO.Declare
+v.Local.fTH.Declare
+v.Local.fEN.Declare
+v.Local.fENO.Declare
+v.Local.fEW.Declare
+v.Local.fEWO.Declare
+V.Local.bExists.Declare
+V.Local.sDate.Declare
+
+V.uGlobal.uEmployee.Redim(-1,-1)
+V.uGlobal.uExport.Redim(-1,-1)
+
+v.Local.sStartDate.Declare
+v.Local.sEndDate.Declare
+
+v.Local.sShift.Declare
+
+v.Local.fHours.Declare
+v.Local.fMin.Declare
+v.Local.fTmpCalc.Declare
+v.Local.sTime.Declare
+
+F.Intrinsic.String.Format(v.Ambient.Date,"MMDDYY",V.Local.sDate)
+
+F.Intrinsic.Control.If(V.Caller.GlobalDir.Right1,=,"\")
+	F.Intrinsic.String.Build("{0}Custom",V.Caller.GlobalDir,V.Global.sFilePath)
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Build("{0}\Custom",V.Caller.GlobalDir,V.Global.sFilePath)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.File.DirExists(V.Global.sFilePath,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.File.CreateDir(V.Global.sFilePath)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("{0}\6606",V.Global.sFilePath,V.Global.sFilePath)
+F.Intrinsic.File.DirExists(V.Global.sFilePath,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.File.CreateDir(V.Global.sFilePath)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("{0}\{1}{2}PyrlExport.csv",V.Global.sFilePath,V.Local.sDate,V.Caller.CompanyCode,V.Global.sFilePath)
+V.Global.sFilePath.Set(V.Screen.Form1!txtFilePath.Text)
+'F.Intrinsic.Control.If(V.Global.sFilePath.Trim,=,"")
+'	F.Intrinsic.UI.Msgbox("Select Save Location First")
+'	F.Intrinsic.Control.ExitSub
+'F.Intrinsic.Control.EndIf
+
+Gui.Form1..Visible(false)
+
+'Alejandro Anazco For United Tools
+f.ODBC.Connection!con.OpenCompanyConnection
+	f.Intrinsic.String.Build("select Employee, Name, Dept, Shift, Type, cast (Hours as DOUBLE) as Hours, Beg_CYMD, Employee+Beg_CYMD as Key_Val, Shift from PYRL_LABOR_XFER where RUN_CYMD = '{0}' and RUN_TIME = '{1}'",V.Global.sRunCYMD,V.Global.sRunTime,V.Local.sSql)
+	f.Data.Datatable.CreateFromSQL("laborDT", "con", v.Local.sSql)
+	
+	f.Intrinsic.Control.If(v.DataTable.laborDT.RowCount, =, 0)
+		f.ODBC.Connection!con.Close
+		f.Intrinsic.Control.End
+	f.Intrinsic.Control.EndIf
+	Function.Intrinsic.Debug.InvokeDebugger
+	Function.Intrinsic.Debug.Stop
+	
+	'Round to closest quarter mark
+	f.Intrinsic.Control.For(v.Local.i, 0, v.DataTable.laborDT.RowCount--, 1)
+		v.Local.sTime.Set(v.DataTable.laborDT(v.Local.i).Hours!FieldVal)
+		f.Intrinsic.String.Split(v.Local.sTime, ".", v.Local.sTime)
+		'Set Parts
+		v.Local.fHours.Set(v.Local.sTime(0))
+		v.Local.fMin.Set(v.Local.sTime(1))
+		'Check quarter mark
+		f.Intrinsic.Math.Div(v.Local.fMin, 15, v.Local.fTmpCalc)
+		f.Intrinsic.Math.Round(v.Local.fTmpCalc, 0, v.Local.fTmpCalc)
+		f.Intrinsic.Math.Mult(v.Local.fTmpCalc, 15, v.Local.fMin)
+		f.Intrinsic.String.Build("0.{0}", v.Local.fMin, v.Local.sTemp)
+		v.Local.fMin.Set(v.Local.sTemp)
+		'Rebuild time
+		f.Intrinsic.Math.Add(v.Local.fHours, v.Local.fMin, v.Local.fHours)
+		f.Data.Datatable.SetValue("laborDT", v.Local.i, "Hours", v.Local.fHours)
+		
+	f.Intrinsic.Control.Next(v.Local.i)
+	
+	'f.Intrinsic.String.Build("select employee+charge_date as key, Shift from Time_attendance")
+	f.Data.Dictionary.CreateFromSQL("shiftDict", "con", "select employee + cast(charge_date as char(8)) as key_Val, Shift from Time_attendance")
+	f.Data.Datatable.FillFromDictionary("laborDT", "shiftDict", "key_Val", "Shift")
+	f.Data.Dictionary.Close("shiftDict")
+	
+	f.Intrinsic.Control.If(v.DataTable.exportDT.Exists)
+		f.Data.Datatable.Close("exportDT")
+	f.Intrinsic.Control.EndIf
+	
+	'Export Table
+	f.Data.Datatable.Create("exportDT", True)
+	f.Data.Datatable.AddColumn("exportDT", "Legal", "String", "L2 Consulting Services Inc")
+	f.Data.Datatable.AddColumn("exportDT", "Key", "String")
+	f.Data.Datatable.AddColumn("exportDT", "Name", "String")
+	f.Data.Datatable.AddColumn("exportDT", "LaborValue1", "String", "")
+	f.Data.Datatable.AddColumn("exportDT", "PayItem", "String")
+	f.Data.Datatable.AddColumn("exportDT", "Hours", "String")
+	
+	f.Data.Datatable.AddRow("exportDT", "Legal", "Legal", "Key", "Key", "Name", "#Name", "LaborValue1", "LaborValue1", "PayItem", "PayItem", "Hours", "Hours")
+	f.Data.DataView.Create("laborDT", "laborDV", 22)
+	f.Data.DataView.ToDataTableDistinct("laborDT", "laborDV", "emplDT", "Employee*!*Name")
+	f.Data.DataView.Close("laborDT", "laborDV")
+	
+'	f.Intrinsic.String.Build("Select Max(END_CYMD) from PYRL_LABOR_XFER where RUN_CYMD = '{0}' and RUN_TIME = '{1}'",V.Global.sRunCYMD,V.Global.sRunTime,V.Local.sSql)
+'	f.ODBC.Connection!con.ExecuteAndReturn(v.Local.sSql, v.Local.sEndDate)
+'	f.Intrinsic.String.Format(v.Local.sEndDate, "@@@@-@@-@@", v.Local.sEndDate)
+'	
+'	f.Intrinsic.String.Build("Select Min(BEG_CYMD) from PYRL_LABOR_XFER where RUN_CYMD = '{0}' and RUN_TIME = '{1}'",V.Global.sRunCYMD,V.Global.sRunTime,V.Local.sSql)
+'	f.ODBC.Connection!con.ExecuteAndReturn(v.Local.sSql, v.Local.sStartDate)
+'	f.Intrinsic.String.Format(v.Local.sStartDate, "@@@@-@@-@@", v.Local.sStartDate)
+'	
+'	f.Intrinsic.Control.For(v.Local.i, 0, v.DataTable.laborDT.RowCount--, 1)
+'		v.Local.sEmp.Set(v.DataTable.laborDT(v.Local.i).Employee!FieldValTrim)
+'		
+'		f.Intrinsic.String.Build("Select Top 1 Shift from V_TIME_ATTENDANCE where charge_date > '{0}' and charge_date < '{1}' and employee = '{2}' order by charge_date desc", v.Local.sStartDate, v.Local.sEndDate, v.Local.sEmp, v.Local.sSql)
+'		f.ODBC.Connection!con.ExecuteAndReturn(v.Local.sSql, v.Local.sShift)
+'		f.Data.Datatable.SetValue("laborDT", v.Local.i, "Shift", v.Local.sShift)
+'	f.Intrinsic.Control.Next(v.Local.i)
+	Function.Intrinsic.Debug.InvokeDebugger
+	Function.Intrinsic.Debug.Stop
+	
+	f.Intrinsic.Control.For(v.Local.i, 0, v.DataTable.emplDT.RowCount--, 1)
+		'Employee Number is 7 chars in customer pay roll system. so storing tha value in the comments 1 field if that field is left blank then emp number will be set with the gss emp no
+		F.Intrinsic.String.Build("Select Comments_1 From Employee_Mstr Where Employee = '{0}'",v.DataTable.emplDT(v.Local.i).Employee!FieldValTrim,V.Local.sSql)
+		F.ODBC.Connection!conX.ExecuteAndReturn(V.Local.sSql,V.Local.sEmp)
+		F.Intrinsic.Control.If(V.Local.sEmp.Trim,=,"")
+			v.Local.sEmp.Set(v.DataTable.emplDT(v.Local.i).Employee!FieldValTrim)
+		F.Intrinsic.Control.EndIf
+		'Get Shift.
+		'Create Filter.
+		f.Intrinsic.String.Build("Employee = '{0}' and Type = 'RT'", v.DataTable.emplDT(v.Local.i).Employee!FieldValTrim, v.Local.sFilter)
+		f.Data.Datatable.Compute("laborDT", "SUM(Hours)", v.Local.sFilter, v.Local.fER)
+		'E overtime
+		f.Intrinsic.String.Build("Employee = '{0}' and Type = 'OT'", v.DataTable.emplDT(v.Local.i).Employee!FieldValTrim, v.Local.sFilter)
+		f.Data.Datatable.Compute("laborDT", "SUM(Hours)", v.Local.sFilter, v.Local.fEO)
+'		'Total Hours
+'		f.Intrinsic.String.Build("Employee = '{0}' and Type in ('OT', 'RT') ", v.Local.sEmp, v.Local.sFilter)
+'		f.Data.Datatable.Compute("laborDT", "SUM(Hours)", v.Local.sFilter, v.Local.fTH)
+'		'E Night
+'		f.Intrinsic.String.Build("Employee = '{0}' and Type = 'RT' and Shift in ('B')", v.Local.sEmp, v.Local.sFilter)
+'		f.Data.Datatable.Compute("laborDT", "SUM(Hours)", v.Local.sFilter, v.Local.fEN)
+'		'E Night Over
+'		f.Intrinsic.String.Build("Employee = '{0}' and Type = 'OT' and Shift in ('B')", v.Local.sEmp, v.Local.sFilter)
+'		f.Data.Datatable.Compute("laborDT", "SUM(Hours)", v.Local.sFilter, v.Local.fENO)
+'		'E Weekend
+'		f.Intrinsic.String.Build("Employee = '{0}' and Type = 'RT' and Shift in ('C')", v.Local.sEmp, v.Local.sFilter)
+'		f.Data.Datatable.Compute("laborDT", "SUM(Hours)", v.Local.sFilter, v.Local.fEW)
+'		'E Weekend Over
+'		f.Intrinsic.String.Build("Employee = '{0}' and Type = 'OT' and Shift in ('C')", v.Local.sEmp, v.Local.sFilter)
+'		f.Data.Datatable.Compute("laborDT", "SUM(Hours)", v.Local.sFilter, v.Local.fEWO)
+		'Set Employee
+'		f.Intrinsic.String.Right(v.Local.sEmp, 4, v.Local.sEmp)
+		'Add Row
+		f.Intrinsic.Control.If(v.Local.fER, <>, 0)
+			f.Data.Datatable.AddRow("exportDT", "Key", v.Local.sEmp.Trim, "Name", v.DataTable.emplDT(v.Local.i).Name!FieldValTrim, "PayItem", "E01", "Hours", v.Local.fER)
+		f.Intrinsic.Control.EndIf
+		
+		f.Intrinsic.Control.If(v.Local.fEO, <>, 0)
+			f.Data.Datatable.AddRow("exportDT", "Key", v.Local.sEmp.Trim, "Name", v.DataTable.emplDT(v.Local.i).Name!FieldValTrim, "PayItem", "E02", "Hours", v.Local.fEO)
+		f.Intrinsic.Control.EndIf
+		
+	f.Intrinsic.Control.Next(v.Local.i)
+
+'	f.Intrinsic.Control.For(v.Local.i, 1, v.DataTable.exportDT.RowCount--, 1)
+'		v.Local.sEmp.Set(v.DataTable.exportDT(v.Local.i).Key!FieldValTrim)
+'		
+'		f.Intrinsic.String.Build("Select Top 1 Shift from V_TIME_ATTENDANCE where charge_date > '{0}' and charge_date < '{1}' and employee = '{2}' order by charge_date desc", v.Local.sStartDate, v.Local.sEndDate, v.Local.sEmp, v.Local.sSql)
+'		f.ODBC.Connection!con.ExecuteAndReturn(v.Local.sSql, v.Local.sShift)
+'		f.Data.Datatable.SetValue("exportDT", v.Local.i, "ShiftWeek", v.Local.sShift)
+'	f.Intrinsic.Control.Next(v.Local.i)
+	
+	
+'	f.Intrinsic.String.Build("select employee, max(shift) from V_TIME_ATTENDANCE where charge_date > '{0}' and charge_date < '{1}' group by employee; order by charge_date desc", v.Local.sStartDate, v.Local.sEndDate, v.Local.sSql)
+'	f.Data.Dictionary.CreateFromSQL("shiftDict", "con", v.Local.sSql)
+'	f.Data.Dictionary.SetDefaultReturn("shiftDict", " ")
+'	f.Data.Dictionary.AddItem("shiftDict", "Key", "#ShiftofWeek")
+'	f.Data.Datatable.FillFromDictionary("exportDT", "shiftDict", "Key", "ShiftWeek")
+'	f.Data.Dictionary.Close("shiftDict")
+	
+	f.Data.Datatable.Close("laborDT")
+f.ODBC.Connection!con.Close
+
+
+F.Intrinsic.Control.CallSub(Export)
+F.Intrinsic.UI.CloseWaitDialog
+'open file if wanted
+F.Intrinsic.UI.Msgbox("Do you want to Open File?","Open File",4,V.Local.i)
+F.Intrinsic.Control.If(V.Local.i,=,6)
+	F.Intrinsic.Task.ShellExecSync(V.Caller.Handle,"OPEN",V.Global.sFilePath,"","",5)
+F.Intrinsic.Control.Endif
+F.Intrinsic.Control.CallSub(Form1_unload)
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdok_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_4054_Syndeo_Payroll_Export.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdok_click.end
+
+program.sub.cmdbrwsfile_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdbrwsfile_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.sFile.Declare(String)
+V.Local.bExists.Declare
+v.Local.sDate.Declare
+F.Intrinsic.Control.If(V.Caller.GlobalDir.Right1,=,"\")
+	F.Intrinsic.String.Build("{0}Custom",V.Caller.GlobalDir,V.Global.sFilePath)
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Build("{0}\Custom",V.Caller.GlobalDir,V.Global.sFilePath)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.File.DirExists(V.Global.sFilePath,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.File.CreateDir(V.Global.sFilePath)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Build("{0}\6606",V.Global.sFilePath,V.Global.sFilePath)
+F.Intrinsic.File.DirExists(V.Global.sFilePath,V.Local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists.Not)
+	F.Intrinsic.File.CreateDir(V.Global.sFilePath)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.String.Format(v.Ambient.Date,"MMDDYY",V.Local.sDate)
+
+'F.Intrinsic.String.Build("PyrlExport{0}{1}",V.Global.sRunCYMD,V.Global.sRunTime,V.Local.sFile)
+
+F.Intrinsic.String.Build("{0}{1}PyrlExport.csv", V.Local.sDate,V.Caller.CompanyCode, V.Local.sFile)
+
+Function.Intrinsic.UI.ShowSaveFileDialog(V.Local.sFile,"Comma Separated File|*.csv", v.Global.sFilePath,V.Local.sRet)
+F.Intrinsic.Control.If(V.Local.sRet,<>,"***CANCEL***")
+	Gui.Form1.txtFilePath.Text(V.Local.sRet)
+F.Intrinsic.Control.EndIf
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdbrwsfile_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_4054_Syndeo_Payroll_Export.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+
+program.sub.cmdbrwsfile_click.end
+
+Program.Sub.Export.Start
+F.Intrinsic.Control.SetErrorHandler("Export_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.i.Declare(Float)
+V.Local.iHandle.Declare(Float)
+V.Local.sTemp.Declare(String)
+
+'write line for column headers
+'V.Local.sTemp.Set("EMPL NO,EMPLOYEE NAME,SOCIAL SECURITY NUMBER,PAY_TYPE,REG HOURS,OVERTIME,HOLIDAY HOURS,PTO,BEREAVEMENT,JURY DUTY")
+
+'V.Local.sTemp.Set("Key, E_Regular (Hourly_Hours), E_Overtime 1.5_Hours, #ShiftofWeek, #Name, #TotalHrs, E_Night Shft/$5.0_Hours, E_Night ShiftOT/5_Hours, E_Wkend Shft/$5.0_Hours, E_Weekend Shft OT_Hours")
+
+f.Data.Datatable.SaveToCSV("exportDT", v.Global.sFilePath, false)
+'F.Intrinsic.File.String2File(V.Global.sFilePath,V.Local.sTemp)
+
+'export file to .csv according to format for Syndeo
+'each ordinal(v.local.i) is a line for the Export File
+'F.Intrinsic.Control.For(V.Local.i,V.uGlobal.uExport.LBound,V.uGlobal.uExport.UBound,1)
+'	F.Intrinsic.UI.ChangeWaitStatus("Writing to File",V.Local.i,V.uGlobal.uExport.LBound,V.uGlobal.uExport.UBound)
+'	F.Intrinsic.String.Build("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",V.uGlobal.uExport(v.Local.i)!Employee,V.uGlobal.uExport(v.Local.i)!Name,V.uGlobal.uExport(v.Local.i)!SSN,V.uGlobal.uExport(v.Local.i)!Pay_Type,V.uGlobal.uExport(v.Local.i)!Reg_Hours,V.uGlobal.uExport(v.Local.i)!OT,V.uGlobal.uExport(v.Local.i)!Holiday,V.uGlobal.uExport(v.Local.i)!PTO,V.uGlobal.uExport(v.Local.i)!Bereavement,V.uGlobal.uExport(v.Local.i)!Jury_Duty,V.Local.sTemp)
+'	F.Intrinsic.File.Append2FileNewLine(V.Global.sFilePath,V.Local.sTemp)
+'F.Intrinsic.Control.Next(V.Local.i)
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Export_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_4054_Syndeo_Payroll_Export.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Export.End
+
+Program.Sub.Comments.Start
+${$5$}$3.0.0.0$}$1
+${$6$}$aanazco$}$20220523121851346$}$7aQAV3Tor/tR9bkuakHbuzQlHVuXCGOzXYdb4iJi8O2XFbM1CuKiSsMwQ6imYcsjtXWt0teil4s=
+Program.Sub.Comments.End
